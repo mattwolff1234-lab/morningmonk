@@ -1,0 +1,23 @@
+{
+  "minSecondsBetweenCues": 6,
+  "faultRepeatSeconds": 12,
+  "praiseAfterFixSeconds": 2,
+  "cleanSilenceSeconds": 15,
+  "encouragement": [
+    "Good. Breathe.",
+    "There it is.",
+    "Better. Stay loose.",
+    "That's the one.",
+    "Easy. Keep going."
+  ],
+  "openers": [
+    "The sun is up. So are you.",
+    "Morning. Let's loosen up.",
+    "Nine minutes. Nothing else to do."
+  ],
+  "streak": [
+    "Day {day}. The river doesn't stop either.",
+    "Day {day}. Look at you, showing up.",
+    "Day {day}. Same time tomorrow."
+  ]
+}

@@ -8,7 +8,7 @@ struct MorningMonkApp: App {
                 // Unit tests use the app as a host; keep the camera off.
                 Color.clear
             } else {
-                PoseDebugView()
+                DebugMenuView()
                     .preferredColorScheme(.dark)
             }
         }

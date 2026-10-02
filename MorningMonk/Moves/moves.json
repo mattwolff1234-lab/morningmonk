@@ -1,0 +1,53 @@
+{
+  "moves": [
+    {
+      "id": "arm_swings",
+      "name": "Arm Swings",
+      "facing": "angle45",
+      "kind": "reps",
+      "durationSeconds": 60,
+      "thresholds": {
+        "faultPersistSeconds": 1.5,
+        "faultClearSeconds": 0.5,
+        "scoreFloor": 25,
+        "swingHysteresis": 0.15,
+        "activeWindowSeconds": 2.5,
+        "armsTooHighMargin": 0.15,
+        "peakWindowSeconds": 1.5,
+        "minElbowAngle": 150,
+        "elbowWindowSeconds": 1.0,
+        "maxSwingsWithoutDip": 8,
+        "kneeDipDegrees": 10,
+        "hipDipTorso": 0.05,
+        "baselineWindowSeconds": 4
+      },
+      "faults": [
+        {
+          "id": "arms_too_high",
+          "cues": [
+            "Shoulder height, no higher.",
+            "Let them stop at your shoulders.",
+            "Lower. The arms aren't trying to fly.",
+            "Shoulder height is plenty."
+          ]
+        },
+        {
+          "id": "bent_elbows",
+          "cues": [
+            "Let the arms hang loose.",
+            "Straight and heavy, like rope.",
+            "Unbend the elbows. Let them swing."
+          ]
+        },
+        {
+          "id": "no_bounce",
+          "cues": [
+            "Soft knees, small bounce.",
+            "Add a little bounce in the knees.",
+            "Knees soft. Bounce with the swing."
+          ]
+        }
+      ]
+    }
+  ]
+}

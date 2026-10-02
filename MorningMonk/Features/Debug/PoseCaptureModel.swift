@@ -1,9 +1,10 @@
 import AVFoundation
 import Observation
 
+/// Camera + pose estimation for any screen that needs live `PoseFrame`s.
 @MainActor
 @Observable
-final class PoseDebugModel {
+final class PoseCaptureModel {
     enum CameraState: Equatable {
         case idle
         case needsPermission
@@ -16,8 +17,8 @@ final class PoseDebugModel {
     private(set) var frame: PoseFrame?
     private(set) var diagnostics: PoseDiagnostics?
 
-    var showSkeleton = true
-    var showConfidencePanel = false
+    /// Called on the main actor for every processed frame.
+    @ObservationIgnored var onFrame: (@MainActor (PoseFrame) -> Void)?
 
     let camera = CameraManager()
     private let estimator = PoseEstimator()
@@ -25,8 +26,10 @@ final class PoseDebugModel {
     init() {
         estimator.onFrame = { [weak self] frame, diagnostics in
             Task { @MainActor [weak self] in
-                self?.frame = frame
-                self?.diagnostics = diagnostics
+                guard let self else { return }
+                self.frame = frame
+                self.diagnostics = diagnostics
+                self.onFrame?(frame)
             }
         }
     }

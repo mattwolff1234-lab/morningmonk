@@ -68,6 +68,14 @@ struct PoseFrame: Codable, Equatable, Sendable {
         return width > 0 ? width : nil
     }
 
+    /// Neck to root (mid-hip) in pixels. Unlike shoulder width, this barely changes
+    /// when the user turns, so angled and side-on moves use it as their scale.
+    var torsoLength: CGFloat? {
+        guard let neck = pixelPoint(.neck), let root = pixelPoint(.root) else { return nil }
+        let length = hypot(neck.x - root.x, neck.y - root.y)
+        return length > 0 ? length : nil
+    }
+
     /// Joint position relative to the shoulder midpoint, in shoulder widths.
     /// y grows downward, matching screen coordinates.
     ///
