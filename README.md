@@ -18,29 +18,45 @@ Tests: `Cmd+U` in Xcode, or CI runs them on every push (`.github/workflows/ios.y
 
 ## Status
 
-**M1: Camera + pose** (current). The app opens straight into the pose debug screen:
+The app opens to a debug menu while the real screens don't exist yet.
+
+**M1: Camera + pose** (done, awaiting on-device check). "Pose tracking" in the menu:
 
 - Front camera, portrait, 30fps, mirrored like a selfie.
 - Vision body pose on every frame; drops to every 2nd frame if the average exceeds 20ms.
 - Joints under 0.3 confidence are dropped, the rest go through a One Euro filter.
 - Skeleton overlay: blue = your left side, orange = your right, white = center. Faded dots are 0.3-0.5 confidence.
-- HUD: camera fps, pose fps, ms per frame, stride, joint count.
-- "Joints" toggle shows raw confidence for all 19 joints, including dropped ones.
+- HUD: camera fps, pose fps, ms per frame, stride, joint count. "Joints" shows raw confidence for all 19 joints.
 
-### M1 review checklist (on device)
+**M2: Arm swings end to end** (current). "Arm Swings" in the menu:
 
-1. Skeleton tracks smoothly while you do slow arm swings, no visible jitter when standing still.
+- Detector counts swings and scores form. Faults: arms above shoulder height, bent elbows, no knee bounce for 8 swings. A fault has to hold for 1.5s before it counts.
+- Coach speaks one cue at most every 6s, worst fault first, rotates phrasings, praises a fix, goes quiet after 15s of clean form.
+- Panel shows live metrics (wrist peak, elbow and knee angles, swings since last bounce), each fault's state (yellow = condition true now, red = active), and the last cues.
+- **Record** captures pose frames; **Stop** then the share button exports them as JSON. These recordings are what we tune thresholds against.
+- All thresholds and cue lines live in `MorningMonk/Moves/moves.json` and `MorningMonk/Coach/coach.json`.
+
+### On-device checklist
+
+1. Pose tracking: skeleton tracks smoothly, no jitter standing still.
 2. Raise your **left** arm: the blue arm should move. If orange moves, left/right labels are flipped.
-3. HUD shows ~30 pose fps and stride 1 on your phone. Note the ms number.
-4. Step back until your feet are in frame: ankles should go green in the Joints panel.
-5. Try baggy clothes and dim light, watch which joints drop.
+3. Note pose fps (want ~30) and ms per frame (budget: under 20ms).
+4. Arm swings, standing at ~45° with your whole body in frame:
+   - Swing normally with a small knee bounce every few swings: reps count, no cues.
+   - Swing above your head: "Shoulder height, no higher."
+   - Swing with bent elbows: "Let the arms hang loose."
+   - Swing with locked knees for ~12s: "Soft knees, small bounce."
+5. Record one clip of each (good, too high, bent, no bounce) and send me the JSON files.
 
 ## Layout
 
 ```
 MorningMonk/
   App/              entry point
-  Features/Debug/   M1 pose debug screen
-  Pose/             camera, Vision, PoseFrame, smoothing
-MorningMonkTests/   filter, normalization, geometry tests
+  Features/Debug/   debug menu, pose and move debug screens
+  Pose/             camera, Vision, PoseFrame, smoothing, recordings
+  Moves/            moves.json, detector protocol and shared machinery
+  Moves/Detectors/  one detector per move
+  Coach/            coach engine, line bank, speech
+MorningMonkTests/   unit tests, synthetic pose generator, detector harness
 ```
